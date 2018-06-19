@@ -7,7 +7,8 @@ import (
 )
 
 type Inject interface {
-	Service(serviceName string) interface{}
+	ServiceByName(serviceName string) interface{}
+	Service(ptr interface{}) interface{}
 	Apply(service interface{})
 	Inject()
 	Map(key string, value interface{})
@@ -106,8 +107,11 @@ func New() Injector {
 	}
 }
 
-func (inject *Injector) Service(serviceName string) interface{} {
-	return inject.Get(serviceName)
+func (inject *Injector) ServiceByName(serviceName string) interface{} {
+	return reflect.ValueOf(inject.Get(serviceName)).Elem().Interface()
+}
+func (inject *Injector) Service(ptr interface{}) interface{} {
+	return reflect.ValueOf(inject.Get(reflect.TypeOf(ptr).String())).Elem().Interface()
 }
 func (inject *Injector) Apply(services ... interface{}) {
 	for _, ser := range services {

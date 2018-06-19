@@ -40,10 +40,7 @@ func TestInjector_Apply(t *testing.T) {
 	injector.MapUint32("stu_age", &age)
 	injector.MapBool("stu_status", &status)
 	injector.Inject()
-	result, _ := json.Marshal(person)
-	fmt.Println(string(result))
-	//tp := reflect.TypeOf(&Person{})
-	//value:=reflect.ValueOf(&Person{})
-	/*  value:=reflect.New(reflect.TypeOf(&Person{}))
-	 fmt.Println(reflect.TypeOf(value.Interface()))*/
+	p := injector.Service(&Person{}).(Person)
+	jsonStr,_:=json.Marshal(p)
+	fmt.Println(string(jsonStr))
 }
