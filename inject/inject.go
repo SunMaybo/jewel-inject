@@ -100,8 +100,8 @@ type Injector struct {
 	Locker  sync.RWMutex
 }
 
-func New() Injector {
-	return Injector{
+func New() *Injector {
+	return &Injector{
 		beanMap: make(map[string]interface{}),
 		Locker:  sync.RWMutex{},
 	}
