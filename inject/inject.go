@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"sync"
 	"log"
+	"strings"
 )
 
 type Inject interface {
@@ -110,8 +111,25 @@ func New() *Injector {
 func (inject *Injector) ServiceByName(serviceName string) interface{} {
 	return reflect.ValueOf(inject.Get(serviceName)).Elem().Interface()
 }
+func (inject *Injector) ServicePtrByName(serviceName string) interface{} {
+	return reflect.ValueOf(inject.Get(serviceName)).Interface()
+}
 func (inject *Injector) Service(ptr interface{}) interface{} {
 	return reflect.ValueOf(inject.Get(reflect.TypeOf(ptr).String())).Elem().Interface()
+}
+func (inject *Injector) ServiceByPrefixName(prefix string) (services []interface{}) {
+	for k, v := range inject.beanMap {
+		if strings.HasPrefix(k, prefix) {
+			services = append(services, reflect.ValueOf(v).Elem().Interface())
+		}
+	}
+	return services
+}
+func (inject *Injector) Services() (services []interface{}) {
+	for _, v := range inject.beanMap {
+		services = append(services, reflect.ValueOf(v).Elem().Interface())
+	}
+	return services
 }
 func (inject *Injector) Apply(services ... interface{}) {
 	for _, ser := range services {
@@ -157,7 +175,7 @@ func (inject *Injector) injectWithReply(service interface{}) {
 				}
 				result := inject.Get(injectNameTag)
 				if result == nil {
-					log.Fatalf("no found `%s` inject", injectNameTag)
+					log.Fatalf("no found `%s` inject from %s", injectNameTag, tp.Name())
 				}
 				vl.Field(i).Set(reflect.ValueOf(result))
 			}
