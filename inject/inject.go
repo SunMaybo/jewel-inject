@@ -203,7 +203,7 @@ func (inject *Injector) injectWithReply(service interface{}) {
 				}
 				result := inject.Get(injectNameTag)
 				if result == nil {
-					log.Fatalf("no found `%s` inject from %s", injectNameTag, tp.Name())
+					log.Printf("no found `%s` inject from %s", injectNameTag, tp.Name())
 				}
 				vl.Field(i).Set(reflect.ValueOf(result))
 			}
