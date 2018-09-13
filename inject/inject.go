@@ -154,8 +154,8 @@ func (inject *Injector) ApplyWithName(name string, service interface{}) {
 	}
 }
 func (inject *Injector) RegisterService(services ... interface{}) {
-	for e := range services {
-		inject.Apply(e)
+	for _, service := range services {
+		inject.Apply(service)
 	}
 	inject.Inject()
 }
@@ -197,17 +197,17 @@ func (inject *Injector) replyOnInject(service interface{}) {
 		vl := reflect.ValueOf(service)
 		inject.ApplyWithName(vl.Type().String(), service)
 	} else if tp.Kind() == reflect.Struct {
-		log.Fatal("no support struct")
+		log.Fatalf("no support struct:%s",tp.Name())
 	} else if tp.Kind() == reflect.Interface {
-		log.Fatal("no support interface")
+		log.Fatalf("no support interface:%s",tp.Name())
 	} else if tp.Kind() == reflect.Chan {
-		log.Fatal("no support chan")
+		log.Fatalf("no support chan:%s",tp.Name())
 	} else if tp.Kind() == reflect.Slice {
-		log.Fatal("no support slice")
+		log.Fatalf("no support slice:%s",tp.Name())
 	} else if tp.Kind() == reflect.Array {
-		log.Fatal("no support array")
+		log.Fatalf("no support array:%s",tp.Name())
 	} else {
-		log.Fatal("no support type")
+		log.Fatalf("no support type:%s",tp.Name())
 	}
 }
 
