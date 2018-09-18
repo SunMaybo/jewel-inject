@@ -184,8 +184,9 @@ func (inject *Injector) injectWithReply(service interface{}) {
 				result := inject.Get(injectNameTag)
 				if result == nil {
 					log.Printf("no found `%s` inject from %s", injectNameTag, tp.Name())
+				} else {
+					vl.Field(i).Set(reflect.ValueOf(result))
 				}
-				vl.Field(i).Set(reflect.ValueOf(result))
 			}
 		}
 	}
@@ -197,17 +198,17 @@ func (inject *Injector) replyOnInject(service interface{}) {
 		vl := reflect.ValueOf(service)
 		inject.ApplyWithName(vl.Type().String(), service)
 	} else if tp.Kind() == reflect.Struct {
-		log.Fatalf("no support struct:%s",tp.Name())
+		log.Fatalf("no support struct:%s", tp.Name())
 	} else if tp.Kind() == reflect.Interface {
-		log.Fatalf("no support interface:%s",tp.Name())
+		log.Fatalf("no support interface:%s", tp.Name())
 	} else if tp.Kind() == reflect.Chan {
-		log.Fatalf("no support chan:%s",tp.Name())
+		log.Fatalf("no support chan:%s", tp.Name())
 	} else if tp.Kind() == reflect.Slice {
-		log.Fatalf("no support slice:%s",tp.Name())
+		log.Fatalf("no support slice:%s", tp.Name())
 	} else if tp.Kind() == reflect.Array {
-		log.Fatalf("no support array:%s",tp.Name())
+		log.Fatalf("no support array:%s", tp.Name())
 	} else {
-		log.Fatalf("no support type:%s",tp.Name())
+		log.Fatalf("no support type:%s", tp.Name())
 	}
 }
 
